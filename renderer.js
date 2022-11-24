@@ -8,9 +8,12 @@
 
 const sourceFileBrowserBtn = document.querySelector(".open-source-file-browser");
 const destinationFileBrowserBtn = document.querySelector(".open-destination-file-browser");
-let paths = {}
 let startCopyBtn = document.querySelector('.start-deep-copy')
 let loadingCircle = document.querySelector('.loader')
+let paths = {
+    srcPath: localStorage.getItem('srcPath') || '',
+    desPath: localStorage.getItem('desPath') || ''
+}
 
 function initPathValue() {
     document.getElementById("source-folder").value = localStorage.getItem('srcPath') || ''
@@ -38,6 +41,7 @@ window.electronAPI.setDirectoryPath((event, response) => {
     paths = {
         ...paths,
         ...response,
+    
     };
     initPathValue()
     

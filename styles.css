@@ -98,8 +98,8 @@ input{
     border-color: gray;
 }
 .loader {
-    border: 5px solid #f3f3f3; /* Light grey */
-    border-top: 5px solid #3498db; /* Blue */
+    border: 5px solid #041c32; 
+    border-top: 5px solid #ecb365; 
     border-radius: 50%;
     width: 30px;
     height: 30px;

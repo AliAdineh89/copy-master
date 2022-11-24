@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@danieldietrich/copy@^0.4.2":
+  "integrity" "sha512-ZVNZIrgb2KeomfNahP77rL445ho6aQj0HHqU6hNlQ61o4rhvca+NS+ePj0d82zQDq2UPk1mjVZBTXgP+ErsDgw=="
+  "resolved" "https://registry.npmjs.org/@danieldietrich/copy/-/copy-0.4.2.tgz"
+  "version" "0.4.2"
+
 "@electron/get@^1.14.1":
   "integrity" "sha512-BrZYyL/6m0ZXz/lDxy/nlVhQz+WF+iPS6qXolEU8atw7h6v1aYkjwJZ63m+bJMBTxDE66X+r2tPS4a/8C82sZw=="
   "resolved" "https://registry.npmjs.org/@electron/get/-/get-1.14.1.tgz"

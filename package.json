@@ -20,6 +20,7 @@
     "electron": "^21.2.3"
   },
   "dependencies": {
+    "@danieldietrich/copy": "^0.4.2",
     "fs-extra": "^10.1.0"
   }
 }

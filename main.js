@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 const path = require('path')
-const fs = require('fs-extra');
+const copy = require('@danieldietrich/copy');
 
 function createWindow () {
   // Create the browser window.
@@ -20,6 +20,43 @@ function createWindow () {
   mainWindow.webContents.openDevTools()
   return mainWindow;
 }
+
+
+// (curr: copy.Totals, sum: copy.Totals) => void
+async function copyWithProgress(src, dst, callback) {
+  const curr = {
+      directories: 0,
+      files: 0,
+      symlinks: 0,
+      size: 0
+  };
+  try {
+    const sum = await copy(src, dst, { dryRun: true });
+    const interval = 100; // ms
+    let update = Date.now();
+    await copy(src, dst, { overwrite: false, afterEach: (source) => {
+        if (source.stats.isDirectory()) {
+            curr.directories += 1;
+        } else if (source.stats.isFile()) {
+            curr.files += 1;
+            curr.size += source.stats.size;
+        } else if (source.stats.isSymbolicLink()) {
+            curr.symlinks += 1;
+            curr.size += source.stats.size;
+        }
+        if (Date.now() - update >= interval) {
+            update = Date.now();
+            callback(curr, sum);
+        }
+    }});
+    callback(sum, sum);
+
+  } catch (error) {
+    console.log("==>>", error)
+  }
+}
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -41,14 +78,16 @@ app.whenReady().then(() => {
   })
 
 
-  ipcMain.on("start-deep-copy", (event, data) => {
-    mainWindow.webContents.send('end-deep-copy', {disableButton: true, message: "", error: null})
-    try {
-      fs.copySync(data.srcPath, data.desPath, { overwrite: false })
-      mainWindow.webContents.send('end-deep-copy', {disableButton: false, message: "Deep copy is finished!", error: null})
-    } catch (error) {
-      mainWindow.webContents.send('end-deep-copy', {disableButton: false, message: "", error})
-    }    
+  ipcMain.on("start-deep-copy", async (event, data) => {
+    console.log(data)
+    await copyWithProgress(data.srcPath, data.desPath, (curr, sum) => {
+        const progress = Math.min(100, Math.floor(curr.size / sum.size * 100));
+
+        mainWindow.webContents.send('end-deep-copy', {disableButton: false, message: 
+          `${Number.parseFloat(progress).toFixed(1)} %`
+          , error: null})
+        
+    });
   })
 
   app.on('activate', function () {
