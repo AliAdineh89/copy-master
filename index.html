@@ -5,18 +5,32 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
     <link href="./styles.css" rel="stylesheet">
-    <title>Hello World!</title>
+    <title>Copy Master</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <div class="header-container">
+      <h1>Copy Master</h1>
+    </div>
+    <div class="wrapper">
 
-    <button class="open-source-file-browser">Browse (Source)</button>
-    <button class="open-destination-file-browser">Browse (Destination)</button>
-    
+    <div class="source-container">
+      <input type="text" id="source-folder" placeholder="Copy from....">
+      <button class="open-source-file-browser">Select Folder...</button>
+    </div>
+
+    <div class="logo-container">
+      <img class="logo" src="./assets/pfeil-nach-unten.png" alt="Copy Master Logo">
+    </div>
+
+    <div class="destination-container">
+      <input type="text" id="destination-folder" placeholder="Copy to....">
+      <button class="open-destination-file-browser">Select Folder...</button>
+    </div>
+    <div class="start-copy-container">
     <button class="start-deep-copy">Start copying</button>
+    <div class="loader"></div>
+    </div>
+  </div>
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
   </body>
