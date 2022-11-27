@@ -43,7 +43,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 50px;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 .logo-container {
     display: flex;
@@ -90,23 +90,14 @@ input{
     font-size: 14px;
     height: 46px;
     padding: 17px 20px;
-    margin-top: 50px;
+    margin-top: 30px;
 
 }
 .start-deep-copy:disabled {
     color: gray;
     border-color: gray;
 }
-.loader {
-    border: 5px solid #041c32; 
-    border-top: 5px solid #ecb365; 
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    margin-top: 50px;
-    animation: spin 2s linear infinite;
-    display: none;
-  }
+
   
   @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -117,4 +108,20 @@ input{
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    padding: 3px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+    display: none;
+}
+
+.progress-bar-fill {
+    display: block;
+    height: 22px;
+    background-color: #659cef;
+    border-radius: 3px;
+    transition: width 500ms ease-in-out;
 }

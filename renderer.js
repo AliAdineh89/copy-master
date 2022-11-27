@@ -8,8 +8,10 @@
 
 const sourceFileBrowserBtn = document.querySelector(".open-source-file-browser");
 const destinationFileBrowserBtn = document.querySelector(".open-destination-file-browser");
+const loadingWrapper = document.querySelector(".progress-bar");
+const loadingBar = document.querySelector(".progress-bar-fill");
+
 let startCopyBtn = document.querySelector('.start-deep-copy')
-let loadingCircle = document.querySelector('.loader')
 let paths = {
     srcPath: localStorage.getItem('srcPath') || '',
     desPath: localStorage.getItem('desPath') || ''
@@ -49,21 +51,25 @@ window.electronAPI.setDirectoryPath((event, response) => {
 
 
 startCopyBtn.addEventListener("click", () => {
-    
-    startCopyBtn.setAttribute('disabled', true)
-    loadingCircle.style.display = 'block'
-    if(paths.srcPath &&  paths.desPath)
-    window.electronAPI.startDeepCopy(paths)
+    loadingBar.style.width = '0px'
+    if(paths.srcPath &&  paths.desPath) {
+        startCopyBtn.setAttribute('disabled', true)
+        loadingWrapper.style.display = 'block'
+        window.electronAPI.startDeepCopy(paths)
+    }
     
 })
 
 window.electronAPI.endDeepCopy((event, data) => {
-     console.log(data)
     startCopyBtn.removeAttribute('disabled')
-    loadingCircle.style.display = 'none'
-
+    loadingBar.style.width = data.message
 })
 
+window.electronAPI.hideProgress((event, data) => {
+    setTimeout(() => {
+        loadingWrapper.style.display = 'none'
+    }, 1500)
+})
 
 
 
