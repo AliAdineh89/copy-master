@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const copy = require('@danieldietrich/copy');
 
-process.noAsar = true
+process.noAsar = true;
 
 function createWindow() {
   // Create the browser window.
@@ -11,7 +11,8 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
     }
   })
 
