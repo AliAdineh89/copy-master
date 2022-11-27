@@ -3,6 +3,8 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const copy = require('@danieldietrich/copy');
 
+process.noAsar = true
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -30,32 +32,30 @@ async function copyWithProgress(src, dst, callback) {
     symlinks: 0,
     size: 0
   };
-  try {
-    const sum = await copy(src, dst, { dryRun: true });
-    const interval = 100; // ms
-    let update = Date.now();
-    await copy(src, dst, {
-      overwrite: false, afterEach: (source) => {
-        if (source.stats.isDirectory()) {
-          curr.directories += 1;
-        } else if (source.stats.isFile()) {
-          curr.files += 1;
-          curr.size += source.stats.size;
-        } else if (source.stats.isSymbolicLink()) {
-          curr.symlinks += 1;
-          curr.size += source.stats.size;
-        }
-        if (Date.now() - update >= interval) {
-          update = Date.now();
-          callback(curr, sum);
-        }
-      }
-    });
-    callback(sum, sum);
 
-  } catch (error) {
-    console.log("==>>", error)
-  }
+  const sum = await copy(src, dst, { dryRun: true });
+  const interval = 100; // ms
+  let update = Date.now();
+  await copy(src, dst, {
+    overwrite: false,
+
+    afterEach: (source) => {
+      if (source.stats.isDirectory()) {
+        curr.directories += 1;
+      } else if (source.stats.isFile()) {
+        curr.files += 1;
+        curr.size += source.stats.size;
+      } else if (source.stats.isSymbolicLink()) {
+        curr.symlinks += 1;
+        curr.size += source.stats.size;
+      }
+      if (Date.now() - update >= interval) {
+        update = Date.now();
+        callback(curr, sum);
+      }
+    }
+  });
+  callback(sum, sum);
 }
 
 
@@ -81,20 +81,24 @@ app.whenReady().then(() => {
 
 
   ipcMain.on("start-deep-copy", async (event, data) => {
-    console.log(data)
-    await copyWithProgress(data.srcPath, data.desPath, (curr, sum) => {
-      const progress = Math.min(100, Math.floor(curr.size / sum.size * 100));
-
-      mainWindow.webContents.send('end-deep-copy', {
-        disableButton: false, message:
-          `${Number.parseFloat(progress).toFixed(1)}%`
-        , error: null
-      })
-
-      if (progress === 100) {
-        mainWindow.webContents.send('hide-progress', {})
-      }
-    });
+    try {
+      await copyWithProgress(data.srcPath, data.desPath, (curr, sum) => {
+        const progress = Math.min(100, Math.floor(curr.size / sum.size * 100));
+  
+        mainWindow.webContents.send('end-deep-copy', {
+          disableButton: false, message:
+            `${Number.parseFloat(progress).toFixed(1)}%`
+          , error: null
+        })
+  
+        if (progress === 100) {
+          mainWindow.webContents.send('hide-progress', {})
+        }
+      });
+    } catch (error) {
+      console.log("==>>", error)
+      mainWindow.webContents.send('show-error', {error})
+    }
   })
 
   app.on('activate', function () {

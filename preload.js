@@ -26,5 +26,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   startDeepCopy: (payload) => ipcRenderer.send("start-deep-copy", payload),
   endDeepCopy: (callback) => ipcRenderer.on("end-deep-copy", callback),
-  hideProgress: (callback) => ipcRenderer.on("hide-progress", callback)
+  hideProgress: (callback) => ipcRenderer.on("hide-progress", callback),
+  showError: (callback) => ipcRenderer.on("show-error", callback)
 })
