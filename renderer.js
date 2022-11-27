@@ -72,6 +72,12 @@ window.electronAPI.hideProgress((event, data) => {
 })
 
 
+window.electronAPI.showError((event, response) => {
+    console.log(response)
+})
+
+
+
 
 
 
