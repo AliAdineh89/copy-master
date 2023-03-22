@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@danieldietrich/copy": "^0.4.2",
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^11.1.1"
   },
   "build": {
     "appId": "m-f-coppier",
